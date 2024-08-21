@@ -48,6 +48,8 @@ export const App = () => {
 
   const numberValue = typeof value === 'string' ? Number(value.replace(/\s+/g, '')) : value;
   const monthlyRate = numberValue > 29_999 ? 0.3999 : 0.598;
+  const monthlyPayment = calculatePayment(numberValue, monthlyRate, periodValue);
+  const totalOverpay = (monthlyPayment * periodValue - numberValue) / periodValue;
 
   const handleInputChange: SliderInputProps['onInputChange'] = (_, { value }) => {
     setValue(typeof value === 'string' ? Number(value.replace(/\s+/g, '')) : value);
@@ -94,7 +96,7 @@ export const App = () => {
     <>
       <div className={appSt.container}>
         <Typography.TitleResponsive tag="h1" view="large" font="system" weight="bold">
-          Вам одобрен кредит наличными
+          Турбо кредит уже одобрен
         </Typography.TitleResponsive>
         <Gap size={16} />
 
@@ -140,45 +142,13 @@ export const App = () => {
           sliderClassName={appSt.slid}
         />
 
-        <div className={appSt.row}>
-          <div className={appSt.img}>
-            <CDNIcon name="glyph_clock_m" />
-          </div>
+        <div className={appSt.box}>
+          <Typography.Text view="primary-medium" weight="bold">
+            {Number(totalOverpay.toFixed(2)).toLocaleString('ru')} ₽
+          </Typography.Text>
 
-          <div className={appSt.rowText}>
-            <Typography.Text view="primary-medium">Зачислим за 5 минут</Typography.Text>
-            <Typography.Text view="primary-small" color="secondary">
-              Все документы уже готовы и подписаны
-            </Typography.Text>
-          </div>
+          <Typography.Text view="primary-small">Сумма переплаты в месяц</Typography.Text>
         </div>
-
-        <div className={appSt.row}>
-          <div className={appSt.img}>
-            <CDNIcon name="glyph_checkmark-circle_m" />
-          </div>
-
-          <div className={appSt.rowText}>
-            <Typography.Text view="primary-medium">Досрочное погашение без переплат</Typography.Text>
-            <Typography.Text view="primary-small" color="secondary">
-              Ваша переплата будет меньше, если погасите досрочно
-            </Typography.Text>
-          </div>
-        </div>
-
-        <div className={appSt.row}>
-          <div className={appSt.img}>
-            <CDNIcon name="glyph_percent-circle_m" />
-          </div>
-
-          <div className={appSt.rowText}>
-            <Typography.Text view="primary-medium">Нет комиссий за снятие</Typography.Text>
-            <Typography.Text view="primary-small" color="secondary">
-              Кредитные деньги не облагаются дополнительной комиссией на вывод
-            </Typography.Text>
-          </div>
-        </div>
-        <Gap size={96} />
       </div>
       <div className={appSt.bottomBtn}>
         <ButtonMobile block view="primary" className={appSt.btn} onClick={submit} loading={loading}>
